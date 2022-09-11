@@ -19,7 +19,8 @@ public class Calculadora extends JFrame {
 	private JPanel contentPane;
 	private JTextField cmpValores;
 	
-	private double num1, num2, total;
+	private Double num1, num2, total;
+	private int exibicao;
 	private String operacao;
 	private JTextField cmpDisplay;
 	
@@ -41,7 +42,7 @@ public class Calculadora extends JFrame {
 	public Calculadora() {
 		setTitle("Calculadora Ju");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 379, 433);
+		setBounds(100, 100, 533, 433);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -49,7 +50,7 @@ public class Calculadora extends JFrame {
 		
 		cmpValores = new JTextField();
 		cmpValores.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		cmpValores.setBounds(10, 64, 343, 64);
+		cmpValores.setBounds(10, 78, 495, 62);
 		contentPane.add(cmpValores);
 		cmpValores.setColumns(10);
 		
@@ -170,11 +171,10 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 num1 = Double.parseDouble(cmpValores.getText());
 				 operacao = "x";
-				 cmpDisplay.setText(""+num1 + " x");
-				 cmpValores.setText("");
+				 exibir(num1, "*");
 			}
 		});
-		btnMultiplicar.setBounds(266, 190, 70, 31);
+		btnMultiplicar.setBounds(266, 232, 70, 31);
 		contentPane.add(btnMultiplicar);
 		
 		JButton btnSubtrair = new JButton("-");
@@ -183,11 +183,10 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 num1 = Double.parseDouble(cmpValores.getText());
 				 operacao = "-";
-				 cmpDisplay.setText(""+num1 + " -");
-				 cmpValores.setText("");
+				 exibir(num1, "-");
 			}
 		});
-		btnSubtrair.setBounds(266, 232, 70, 31);
+		btnSubtrair.setBounds(266, 275, 70, 31);
 		contentPane.add(btnSubtrair);
 		
 		JButton btnSomar = new JButton("+");
@@ -195,11 +194,10 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 num1 = Double.parseDouble(cmpValores.getText());
 				 operacao = "+";
-				 cmpDisplay.setText(""+num1 + " +");
-				 cmpValores.setText("");
+				 exibir(num1, "+");
 			}
 		});
-		btnSomar.setBounds(266, 274, 70, 31);
+		btnSomar.setBounds(266, 313, 70, 31);
 		contentPane.add(btnSomar);
 		
 		JButton btnResultado = new JButton("=");
@@ -209,31 +207,36 @@ public class Calculadora extends JFrame {
 				
 				if (operacao == "+") {
 					total = num1 + num2;
+					exibir(num1, num2, total, "+");
 				}
 				else if (operacao == "-") {
 					total = num1 - num2;
+					exibir(num1, num2, total, "-");
 				}
 				else if (operacao == "x") {
 					total = num1 * num2;
+					exibir(num1, num2, total, "*");
 				}
 				else if (operacao == "/") {
+					if(num2 ==0) {
+						cmpValores.setText("Não é possível dividir por zero");
+					}else {
 					total= num1 / num2;
+					exibir(num1, num2, total, "/");
+					}
 				}
 				else if (operacao == "%") {
 					total = (num1 * num2) / 100;
+					exibir(num1, num2, total, "%");
 				}
-				else if (operacao == "x�") {
-					total = num1 * num1;
+				else if(operacao == "xⁿ") {
+					total = Math.pow(num1 , num2);
+					exibir(num1, num2, total, "^");
 				}
-				
-				cmpDisplay.setText("");
-				cmpDisplay.setText(""+num1 + " " + operacao + " " + num2);
-				cmpValores.setText("");
-				cmpValores.setText("" + total);
-				
+								
 			}
 		});
-		btnResultado.setBounds(266, 313, 70, 31);
+		btnResultado.setBounds(370, 354, 121, 31);
 		contentPane.add(btnResultado);
 		
 		JButton btnDividir = new JButton("/");
@@ -241,11 +244,10 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 num1 = Double.parseDouble(cmpValores.getText());
 				 operacao = "/";
-				 cmpDisplay.setText(""+num1 + " /");
-				 cmpValores.setText("");
+				 exibir(num1, "/");
 			}
 		});
-		btnDividir.setBounds(266, 148, 70, 31);
+		btnDividir.setBounds(266, 190, 70, 31);
 		contentPane.add(btnDividir);
 		
 		JButton btnLimpar = new JButton("Limpar");
@@ -283,11 +285,10 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 num1 = Double.parseDouble(cmpValores.getText());
 				 operacao = "%";
-				 cmpDisplay.setText(""+num1 + " %");
-				 cmpValores.setText("");
+				 exibir(num1, "%");
 			}
 		});
-		btnPorcentagem.setBounds(27, 148, 68, 31);
+		btnPorcentagem.setBounds(423, 190, 68, 31);
 		contentPane.add(btnPorcentagem);
 		
 		JButton btnSair = new JButton("Sair");
@@ -295,14 +296,158 @@ public class Calculadora extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);			}
 		});
-		btnSair.setBounds(188, 355, 148, 28);
+		btnSair.setBounds(198, 354, 148, 30);
 		contentPane.add(btnSair);
 		
 		cmpDisplay = new JTextField();
 		cmpDisplay.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		cmpDisplay.setEditable(false);
-		cmpDisplay.setBounds(10, 11, 343, 55);
+		cmpDisplay.setBounds(10, 23, 495, 55);
 		contentPane.add(cmpDisplay);
 		cmpDisplay.setColumns(10);
+		
+		JButton btnRaizQuadrada = new JButton("\u221Ax");
+		btnRaizQuadrada.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = Math.sqrt(num1);
+				exibir(num1, total, "√");
+			}
+		});
+		btnRaizQuadrada.setBounds(346, 190, 68, 30);
+		contentPane.add(btnRaizQuadrada);
+		
+		JButton btnXElevadoAoQuadrado = new JButton("x\u00B2");
+		btnXElevadoAoQuadrado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = Math.pow(num1,2);
+				exibir(num1, total, "sqr");
+			}
+		});
+		btnXElevadoAoQuadrado.setBounds(346, 275, 68, 30);
+		contentPane.add(btnXElevadoAoQuadrado);
+		
+		JButton btnXElevadoAoN = new JButton("xⁿ");
+		btnXElevadoAoN.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 num1 = Double.parseDouble(cmpValores.getText());
+				 operacao = "xⁿ";
+				 cmpDisplay.setText(""+num1 + " ^");
+				 cmpValores.setText("");
+			}
+		});
+		btnXElevadoAoN.setBounds(346, 313, 68, 30);
+		contentPane.add(btnXElevadoAoN);
+		
+		JButton btnXElevadoaMenosUm = new JButton("1/x");
+		btnXElevadoaMenosUm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = (1/num1);
+				exibir(num1, total, " 1/");
+			}
+		});
+		btnXElevadoaMenosUm.setBounds(346, 232, 68, 30);
+		contentPane.add(btnXElevadoaMenosUm);
+		
+		JButton btnSeno = new JButton("sin");
+		btnSeno.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = Math.sin(Math.toRadians(num1));
+				exibir(num1, total, "sin");
+			}
+		});
+		btnSeno.setBounds(423, 232, 68, 30);
+		contentPane.add(btnSeno);
+		
+		JButton btnCosseno = new JButton("cos");
+		btnCosseno.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = Math.cos(Math.toRadians(num1));
+				exibir(num1, total, "cos");
+			}
+		});
+		btnCosseno.setBounds(423, 274, 68, 30);
+		contentPane.add(btnCosseno);
+		
+		JButton btnTangente = new JButton("tan");
+		btnTangente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				num1 = Double.parseDouble(cmpValores.getText());
+				total = Math.tan(Math.toRadians(num1));
+				exibir(num1, total, "tan");
+			}
+		});
+		btnTangente.setBounds(424, 313, 68, 30);
+		contentPane.add(btnTangente);
+	}
+	
+	private void exibir(Double num1, Double result, String operacao ) {
+		int valor = num1.intValue();
+		double resto = num1 - valor;
+		
+		int valorResultado = result.intValue();
+		double restoResultado = result - valorResultado;
+		
+		if(resto > 0) {
+			cmpDisplay.setText(operacao + "(" + num1 + ")");
+		}else {
+			cmpDisplay.setText(operacao + "(" + num1.intValue() + ")");
+		}
+		
+		if (restoResultado > 0)
+		{
+			cmpValores.setText("" + result);
+		}else {
+			cmpValores.setText("" + result.intValue());
+		}
+	}
+	
+	private void exibir(Double num1,Double num2, Double result, String operacao ) {
+		int valor1 = num1.intValue();
+		double resto = num1 - valor1;
+		
+		int valor2 = num2.intValue();
+		double resto2 = num2 - valor2;
+		
+		int valorResultado = result.intValue();
+		double restoResultado = result - valorResultado;
+		
+		if(resto > 0 && resto2 > 0) {
+			cmpDisplay.setText(num1 + " " + operacao + " " + num2);
+		} 
+		else if(resto > 0 && resto2 == 0) {
+			cmpDisplay.setText(num1 + " " + operacao + " " + num2.intValue());
+		} 
+		else if(resto == 0 && resto2 > 0) {
+			cmpDisplay.setText(num1.intValue() + " " + operacao + " " + num2);
+		}
+		else {
+			cmpDisplay.setText(num1.intValue() + " " + operacao + " " + num2.intValue());
+		}
+		
+		
+		if (restoResultado > 0)
+		{
+			cmpValores.setText("" + result);
+		}else {
+			cmpValores.setText("" + result.intValue());
+		}
+	}
+	
+	private void exibir(Double num1, String operacao) {
+		int valor = num1.intValue();
+		double resto = num1 - valor;
+		
+		if(resto > 0) {
+			 cmpDisplay.setText(num1 + " "+ operacao);
+		}else {
+			 cmpDisplay.setText(num1.intValue() + " "+ operacao);
+		}
+		cmpValores.setText("");
+	
 	}
 }
